@@ -4,6 +4,7 @@ import Stories from "@/components/Stories";
 import PostsFeed from "@/components/PostsFeed";
 import UserProfile from "@/components/UserProfile";
 import BottomNavigation from "@/components/BottomNavigation";
+import Search from "@/components/Search";
 
 interface DashboardProps {
   currentUser: any;
@@ -12,33 +13,48 @@ interface DashboardProps {
 
 const Dashboard = ({ currentUser, onLogout }: DashboardProps) => {
   const [activePostAuthor, setActivePostAuthor] = useState<any>(null);
+  const [activeView, setActiveView] = useState<string>("home");
+
+  const renderMainContent = () => {
+    switch (activeView) {
+      case "search":
+        return <Search />;
+      case "home":
+      default:
+        return (
+          <div className="flex-1 max-w-2xl mx-auto px-4 py-6 lg:ml-80">
+            {/* Stories Section */}
+            <div className="mb-8">
+              <Stories />
+            </div>
+
+            {/* Posts Feed */}
+            <PostsFeed 
+              currentUser={currentUser} 
+              onActivePostChange={setActivePostAuthor}
+            />
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
       <div className="flex">
         {/* Left Sidebar - Active Post Author Profile */}
-        <div className="hidden lg:block w-80 bg-white shadow-sm border-r fixed left-0 top-0 h-screen z-10">
-          <UserProfile 
-            user={activePostAuthor || currentUser} 
-            onLogout={onLogout}
-            isActivePostAuthor={!!activePostAuthor}
-          />
-        </div>
+        {activeView === "home" && (
+          <div className="hidden lg:block w-80 bg-white shadow-sm border-r fixed left-0 top-0 h-screen z-10">
+            <UserProfile 
+              user={activePostAuthor || currentUser} 
+              onLogout={onLogout}
+              isActivePostAuthor={!!activePostAuthor}
+            />
+          </div>
+        )}
 
         {/* Center Content */}
-        <div className="flex-1 max-w-2xl mx-auto px-4 py-6 lg:ml-80">
-          {/* Stories Section */}
-          <div className="mb-8">
-            <Stories />
-          </div>
-
-          {/* Posts Feed */}
-          <PostsFeed 
-            currentUser={currentUser} 
-            onActivePostChange={setActivePostAuthor}
-          />
-        </div>
+        {renderMainContent()}
 
         {/* Right Sidebar - Could be used for future features */}
         <div className="hidden xl:block w-80">
@@ -47,7 +63,7 @@ const Dashboard = ({ currentUser, onLogout }: DashboardProps) => {
       </div>
 
       {/* Fixed Bottom Navigation */}
-      <BottomNavigation />
+      <BottomNavigation activeView={activeView} onViewChange={setActiveView} />
     </div>
   );
 };
