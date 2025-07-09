@@ -5,6 +5,7 @@ import PostsFeed from "@/components/PostsFeed";
 import UserProfile from "@/components/UserProfile";
 import BottomNavigation from "@/components/BottomNavigation";
 import Search from "@/components/Search";
+import Create from "@/components/Create";
 
 interface DashboardProps {
   currentUser: any;
@@ -19,6 +20,8 @@ const Dashboard = ({ currentUser, onLogout }: DashboardProps) => {
     switch (activeView) {
       case "search":
         return <Search />;
+      case "create":
+        return <Create onClose={() => setActiveView("home")} />;
       case "home":
       default:
         return (
