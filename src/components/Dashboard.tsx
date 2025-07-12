@@ -6,6 +6,8 @@ import UserProfile from "@/components/UserProfile";
 import BottomNavigation from "@/components/BottomNavigation";
 import Search from "@/components/Search";
 import Create from "@/components/Create";
+import Messages from "@/components/Messages";
+import Profile from "@/components/Profile";
 
 interface DashboardProps {
   currentUser: any;
@@ -22,6 +24,10 @@ const Dashboard = ({ currentUser, onLogout }: DashboardProps) => {
         return <Search />;
       case "create":
         return <Create onClose={() => setActiveView("home")} />;
+      case "messages":
+        return <Messages />;
+      case "profile":
+        return <Profile currentUser={currentUser} />;
       case "home":
       default:
         return (
