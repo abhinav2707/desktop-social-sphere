@@ -48,12 +48,12 @@ const Dashboard = ({ currentUser, onLogout }: DashboardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Main Content */}
       <div className="flex">
         {/* Left Sidebar - Active Post Author Profile */}
         {activeView === "home" && (
-          <div className="hidden lg:block w-80 bg-white shadow-sm border-r fixed left-0 top-0 h-screen z-10">
+          <div className="hidden lg:block w-80 bg-card shadow-sm border-r border-border fixed left-0 top-0 h-screen z-10">
             <UserProfile 
               user={activePostAuthor || currentUser} 
               onLogout={onLogout}
