@@ -18,7 +18,7 @@ const BottomNavigation = ({ activeView, onViewChange }: BottomNavigationProps) =
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-lg z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50">
       <div className="flex items-center justify-around py-3 px-4 max-w-md mx-auto">
         {navItems.map((item) => (
           <Button
@@ -28,8 +28,8 @@ const BottomNavigation = ({ activeView, onViewChange }: BottomNavigationProps) =
             onClick={() => onViewChange(item.key)}
             className={`flex flex-col items-center p-2 min-w-0 ${
               activeView === item.key
-                ? 'text-primary' 
-                : 'text-muted-foreground hover:text-primary'
+                ? 'text-purple-600' 
+                : 'text-gray-600 hover:text-purple-600'
             }`}
           >
             <item.icon className={`w-6 h-6 mb-1 ${activeView === item.key ? 'fill-current' : ''}`} />

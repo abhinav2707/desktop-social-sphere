@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Search as SearchIcon, User } from "lucide-react";
@@ -76,18 +77,18 @@ const Search = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background p-4">
+    <div className="min-h-screen bg-gray-50 p-4">
       {/* Search Bar */}
       <div className="max-w-2xl mx-auto mb-8">
         <Card className="p-4 shadow-sm">
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               type="text"
               placeholder="Search people..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-3 text-lg border-0 focus-visible:ring-1 focus-visible:ring-ring"
+              className="pl-10 pr-4 py-3 text-lg border-0 focus-visible:ring-1 focus-visible:ring-purple-500"
             />
           </div>
         </Card>
@@ -108,14 +109,14 @@ const Search = () => {
                     <LazyImage
                       src={user.avatar}
                       alt={user.name}
-                      className="w-full h-full rounded-full object-cover border-2 border-muted group-hover:border-primary transition-colors"
+                      className="w-full h-full rounded-full object-cover border-2 border-purple-100 group-hover:border-purple-300 transition-colors"
                     />
                   </div>
-                  <h3 className="font-semibold text-card-foreground text-sm truncate mb-1">
+                  <h3 className="font-semibold text-gray-800 text-sm truncate mb-1">
                     {user.name}
                   </h3>
-                  <p className="text-muted-foreground text-xs mb-2">@{user.username}</p>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-gray-500 text-xs mb-2">@{user.username}</p>
+                  <p className="text-gray-400 text-xs">
                     {user.followers.toLocaleString()} followers
                   </p>
                 </div>
@@ -127,8 +128,8 @@ const Search = () => {
         {/* Loading indicator */}
         {loading && (
           <div className="flex justify-center mt-8">
-            <div className="flex items-center space-x-2 text-muted-foreground">
-              <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent"></div>
+            <div className="flex items-center space-x-2 text-gray-500">
+              <div className="animate-spin rounded-full h-6 w-6 border-2 border-purple-500 border-t-transparent"></div>
               <span>Loading more users...</span>
             </div>
           </div>
@@ -137,9 +138,9 @@ const Search = () => {
         {/* No results message */}
         {searchQuery && filteredUsers.length === 0 && (
           <div className="text-center py-12">
-            <User className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-card-foreground mb-2">No users found</h3>
-            <p className="text-muted-foreground">Try searching with a different keyword</p>
+            <User className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+            <h3 className="text-lg font-medium text-gray-600 mb-2">No users found</h3>
+            <p className="text-gray-400">Try searching with a different keyword</p>
           </div>
         )}
       </div>
@@ -182,8 +183,8 @@ const LazyImage = ({ src, alt, className }: LazyImageProps) => {
       {isInView ? (
         <>
           {!isLoaded && (
-            <div className="w-full h-full bg-muted animate-pulse rounded-full flex items-center justify-center">
-              <User className="w-8 h-8 text-muted-foreground" />
+            <div className="w-full h-full bg-gray-200 animate-pulse rounded-full flex items-center justify-center">
+              <User className="w-8 h-8 text-gray-400" />
             </div>
           )}
           <img
@@ -195,8 +196,8 @@ const LazyImage = ({ src, alt, className }: LazyImageProps) => {
           />
         </>
       ) : (
-        <div className="w-full h-full bg-muted animate-pulse rounded-full flex items-center justify-center">
-          <User className="w-8 h-8 text-muted-foreground" />
+        <div className="w-full h-full bg-gray-200 animate-pulse rounded-full flex items-center justify-center">
+          <User className="w-8 h-8 text-gray-400" />
         </div>
       )}
     </div>

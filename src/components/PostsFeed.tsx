@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Heart, MessageCircle, Share, Bookmark, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -96,11 +97,11 @@ const PostsFeed = ({ currentUser, onActivePostChange }: PostsFeedProps) => {
   return (
     <div className="space-y-6">
       {posts.map((post) => (
-        <div key={post.id} className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+        <div key={post.id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
           {/* Post Header */}
           <div className="flex items-center justify-between p-4">
             <div 
-              className="flex items-center space-x-3 cursor-pointer hover:bg-muted p-2 rounded-lg -m-2"
+              className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg -m-2"
               onClick={() => handlePostClick(post)}
             >
               <img
@@ -109,8 +110,8 @@ const PostsFeed = ({ currentUser, onActivePostChange }: PostsFeedProps) => {
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
-                <p className="font-semibold text-card-foreground">{post.username}</p>
-                <p className="text-sm text-muted-foreground">{post.timestamp}</p>
+                <p className="font-semibold text-gray-800">{post.username}</p>
+                <p className="text-sm text-gray-500">{post.timestamp}</p>
               </div>
             </div>
             <Button variant="ghost" size="sm">
@@ -139,34 +140,34 @@ const PostsFeed = ({ currentUser, onActivePostChange }: PostsFeedProps) => {
                     className={`w-6 h-6 ${
                       likedPosts.has(post.id)
                         ? 'fill-red-500 text-red-500'
-                        : 'text-card-foreground hover:text-muted-foreground'
+                        : 'text-gray-700 hover:text-gray-500'
                     }`}
                   />
                 </button>
-                <button className="text-card-foreground hover:text-muted-foreground">
+                <button className="text-gray-700 hover:text-gray-500">
                   <MessageCircle className="w-6 h-6" />
                 </button>
-                <button className="text-card-foreground hover:text-muted-foreground">
+                <button className="text-gray-700 hover:text-gray-500">
                   <Share className="w-6 h-6" />
                 </button>
               </div>
-              <button className="text-card-foreground hover:text-muted-foreground">
+              <button className="text-gray-700 hover:text-gray-500">
                 <Bookmark className="w-6 h-6" />
               </button>
             </div>
 
             {/* Likes Count */}
-            <p className="font-semibold text-card-foreground mb-2">
+            <p className="font-semibold text-gray-800 mb-2">
               {post.likes.toLocaleString()} likes
             </p>
 
             {/* Caption */}
-            <p className="text-card-foreground">
+            <p className="text-gray-800">
               <span className="font-semibold">{post.username}</span> {post.caption}
             </p>
 
             {/* Comments */}
-            <button className="text-muted-foreground text-sm mt-2 hover:text-card-foreground">
+            <button className="text-gray-500 text-sm mt-2 hover:text-gray-700">
               View all {post.comments} comments
             </button>
           </div>
