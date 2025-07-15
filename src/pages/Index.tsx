@@ -1,27 +1,20 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
-import Dashboard from "@/components/Dashboard";
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const navigate = useNavigate();
 
   const handleLogin = (userData: any) => {
-    setCurrentUser(userData);
-    setIsAuthenticated(true);
+    navigate("/dashboard");
   };
 
   const handleRegister = (userData: any) => {
-    setCurrentUser(userData);
-    setIsAuthenticated(true);
+    navigate("/dashboard");
   };
-
-  if (isAuthenticated) {
-    return <Dashboard currentUser={currentUser} onLogout={() => setIsAuthenticated(false)} />;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">

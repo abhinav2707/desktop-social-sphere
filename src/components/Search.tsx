@@ -1,205 +1,122 @@
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState } from "react";
+import { Search as SearchIcon, X, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Search as SearchIcon, User } from "lucide-react";
-import { Card } from "@/components/ui/card";
-
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  avatar: string;
-  followers: number;
-}
+import { Button } from "@/components/ui/button";
+import BottomNavigation from "@/components/BottomNavigation";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
-  const [visibleUsers, setVisibleUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const observer = useRef<IntersectionObserver>();
-  const lastUserElementRef = useCallback((node: HTMLDivElement) => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        setPage(prevPage => prevPage + 1);
-      }
-    });
-    if (node) observer.current.observe(node);
-  }, [loading]);
+  const [recentSearches] = useState([
+    "travel", "food", "photography", "nature", "art"
+  ]);
+  const [trendingTopics] = useState([
+    "#sunset", "#foodie", "#travel", "#photography", "#art", "#nature"
+  ]);
+  const navigate = useNavigate();
 
-  // Generate random users data
-  const generateUsers = (count: number, startId: number = 1): User[] => {
-    const names = [
-      "Emma Johnson", "Liam Smith", "Olivia Brown", "Noah Davis", "Ava Wilson",
-      "Ethan Moore", "Sophia Taylor", "Mason Anderson", "Isabella Thomas", "William Jackson",
-      "Mia White", "James Harris", "Charlotte Martin", "Benjamin Thompson", "Amelia Garcia",
-      "Lucas Rodriguez", "Harper Lewis", "Henry Lee", "Evelyn Walker", "Alexander Hall",
-      "Abigail Allen", "Michael Young", "Emily Hernandez", "Daniel King", "Elizabeth Wright"
-    ];
-    
-    return Array.from({ length: count }, (_, index) => ({
-      id: startId + index,
-      name: names[index % names.length],
-      username: `user${startId + index}`,
-      avatar: `https://images.unsplash.com/photo-${1472099645785 + index}?w=150&h=150&fit=crop&crop=face`,
-      followers: Math.floor(Math.random() * 10000) + 100
-    }));
+  const handleViewChange = (view: string) => {
+    switch (view) {
+      case "home":
+        navigate("/dashboard");
+        break;
+      case "create":
+        navigate("/create");
+        break;
+      case "messages":
+        navigate("/messages");
+        break;
+      case "profile":
+        navigate("/profile");
+        break;
+      default:
+        break;
+    }
   };
 
-  // Initialize users on component mount
-  useEffect(() => {
-    const initialUsers = generateUsers(20);
-    setUsers(initialUsers);
-    setVisibleUsers(initialUsers.slice(0, 8));
-  }, []);
-
-  // Load more users when page changes
-  useEffect(() => {
-    if (page > 1) {
-      setLoading(true);
-      // Simulate API call delay
-      setTimeout(() => {
-        const newUsers = generateUsers(8, users.length + 1);
-        setUsers(prev => [...prev, ...newUsers]);
-        setVisibleUsers(prev => [...prev, ...newUsers]);
-        setLoading(false);
-      }, 500);
-    }
-  }, [page, users.length]);
-
-  // Filter users based on search query
-  const filteredUsers = visibleUsers.filter(user =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      {/* Search Bar */}
-      <div className="max-w-2xl mx-auto mb-8">
-        <Card className="p-4 shadow-sm">
-          <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              type="text"
-              placeholder="Search people..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-3 text-lg border-0 focus-visible:ring-1 focus-visible:ring-purple-500"
-            />
-          </div>
-        </Card>
-      </div>
-
-      {/* Users Grid */}
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {filteredUsers.map((user, index) => (
-            <div
-              key={user.id}
-              ref={index === filteredUsers.length - 1 ? lastUserElementRef : null}
-              className="group cursor-pointer"
-            >
-              <Card className="p-4 hover:shadow-md transition-all duration-200 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="relative mx-auto w-20 h-20 mb-3">
-                    <LazyImage
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-full h-full rounded-full object-cover border-2 border-purple-100 group-hover:border-purple-300 transition-colors"
-                    />
-                  </div>
-                  <h3 className="font-semibold text-gray-800 text-sm truncate mb-1">
-                    {user.name}
-                  </h3>
-                  <p className="text-gray-500 text-xs mb-2">@{user.username}</p>
-                  <p className="text-gray-400 text-xs">
-                    {user.followers.toLocaleString()} followers
-                  </p>
-                </div>
-              </Card>
-            </div>
-          ))}
-        </div>
-
-        {/* Loading indicator */}
-        {loading && (
-          <div className="flex justify-center mt-8">
-            <div className="flex items-center space-x-2 text-gray-500">
-              <div className="animate-spin rounded-full h-6 w-6 border-2 border-purple-500 border-t-transparent"></div>
-              <span>Loading more users...</span>
-            </div>
-          </div>
-        )}
-
-        {/* No results message */}
-        {searchQuery && filteredUsers.length === 0 && (
-          <div className="text-center py-12">
-            <User className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-600 mb-2">No users found</h3>
-            <p className="text-gray-400">Try searching with a different keyword</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Lazy loading image component
-interface LazyImageProps {
-  src: string;
-  alt: string;
-  className?: string;
-}
-
-const LazyImage = ({ src, alt, className }: LazyImageProps) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const imgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={imgRef} className={className}>
-      {isInView ? (
-        <>
-          {!isLoaded && (
-            <div className="w-full h-full bg-gray-200 animate-pulse rounded-full flex items-center justify-center">
-              <User className="w-8 h-8 text-gray-400" />
-            </div>
-          )}
-          <img
-            src={src}
-            alt={alt}
-            className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
-            onLoad={() => setIsLoaded(true)}
-            style={{ display: isLoaded ? 'block' : 'none' }}
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* Center the main content */}
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        {/* Search Header */}
+        <div className="relative mb-6">
+          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-10 py-3 bg-gray-100 border-none rounded-lg"
           />
-        </>
-      ) : (
-        <div className="w-full h-full bg-gray-200 animate-pulse rounded-full flex items-center justify-center">
-          <User className="w-8 h-8 text-gray-400" />
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
         </div>
-      )}
+
+        {/* Recent Searches */}
+        {!searchQuery && (
+          <>
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold">Recent</h2>
+                <Button variant="ghost" size="sm" className="text-blue-500">
+                  Clear all
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {recentSearches.map((search, index) => (
+                  <div key={index} className="flex items-center justify-between py-2">
+                    <div className="flex items-center space-x-3">
+                      <SearchIcon className="w-4 h-4 text-gray-400" />
+                      <span className="text-gray-700">{search}</span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="p-1">
+                      <X className="w-4 h-4 text-gray-400" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Trending */}
+            <div className="mb-6">
+              <div className="flex items-center mb-3">
+                <TrendingUp className="w-5 h-5 text-gray-600 mr-2" />
+                <h2 className="text-lg font-semibold">Trending</h2>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {trendingTopics.map((topic, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="justify-start text-left p-3 h-auto"
+                  >
+                    {topic}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Search Results */}
+        {searchQuery && (
+          <div className="text-center text-gray-500 py-8">
+            <SearchIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+            <p>Search for "{searchQuery}"</p>
+          </div>
+        )}
+      </div>
+
+      <BottomNavigation activeView="search" onViewChange={handleViewChange} />
     </div>
   );
 };
